@@ -1,5 +1,9 @@
+import { ActionButton, MotionButtonBase } from "@follow/components/ui/button/index.js"
+import { RootPortal } from "@follow/components/ui/portal/index.js"
 import { IN_ELECTRON } from "@follow/shared/constants"
 import type { MediaModel } from "@follow/shared/hono"
+import { stopPropagation } from "@follow/utils/dom"
+import { cn } from "@follow/utils/utils"
 import type { FC } from "react"
 import { Fragment, useCallback, useEffect, useRef, useState } from "react"
 import { Blurhash } from "react-blurhash"
@@ -12,15 +16,11 @@ import { useWindowSize } from "usehooks-ts"
 import { m } from "~/components/common/Motion"
 import { COPY_MAP } from "~/constants"
 import { tipcClient } from "~/lib/client"
-import { stopPropagation } from "~/lib/dom"
 import { replaceImgUrlIfNeed } from "~/lib/img-proxy"
-import { cn } from "~/lib/utils"
 import { EntryContent } from "~/modules/entry-content"
 
-import { ActionButton, MotionButtonBase } from "../button"
 import { microReboundPreset } from "../constants/spring"
 import { useCurrentModal } from "../modal"
-import { RootPortal } from "../portal"
 import { VideoPlayer } from "./VideoPlayer"
 
 const Wrapper: Component<{
@@ -301,14 +301,14 @@ const FallbackableImage: FC<
     <div className={cn("center flex size-full flex-col", containerClassName)}>
       {!isAllError && (
         <div
-          className={cn("relative", width < height && "h-full")}
+          className={cn("relative", width <= height && "h-full")}
           style={{
             // px-20 pb-8 pt-10
             width:
               width && height && width > height
-                ? Math.min((windowHeight - 32 - 40) * (width / height), width)
+                ? `${Math.min((windowHeight - 32 - 40) * (width / height), width)}px`
                 : undefined,
-            maxWidth: width > height ? windowWidth - 80 - 80 - 400 : undefined,
+            maxWidth: width > height ? `${windowWidth - 80 - 80 - 400}px` : undefined,
           }}
         >
           <img
